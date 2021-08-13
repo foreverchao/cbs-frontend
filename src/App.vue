@@ -10,7 +10,7 @@
     <v-app-bar app>
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
 
-      <v-toolbar-title>CBS</v-toolbar-title>
+      <v-toolbar-title>CBS test</v-toolbar-title>
     </v-app-bar>
 
     <v-main>
