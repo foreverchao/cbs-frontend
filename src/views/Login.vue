@@ -1,16 +1,16 @@
 <template>
-  <login-hello />
+  <login-page />
 </template>
 
 <script>
   
-  import LoginHello from '../components/LoginHello'
+  import LoginPage from '../components/LoginPage'
 
   export default {
     name: 'Login',
 
     components: {
-      LoginHello,
+      LoginPage
     },
   }
 </script>
