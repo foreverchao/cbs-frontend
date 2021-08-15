@@ -71,6 +71,7 @@
 </template>
 
 <script>
+import {apiUserLogin} from "@/APIs/Auth";
 export default {
   name:'LoginPage',
   data: () => ({
@@ -102,7 +103,20 @@ export default {
     },
     Login(){
       if(this.password != "" && this.email != ""){
-        this.$router.push("/home");
+        apiUserLogin({
+          email:this.email,
+          password:this.password,
+        })
+        .then((res) => {
+           //console.log(res)
+           this.$store.commit("changeToken", res.data.token);
+           this.$router.push("/home");
+        })
+        .catch(() => {
+          console.log("Login fail !")
+        })
+
+        
       }
       else if (this.password == "" || this.email == ""){
         this.validate();
