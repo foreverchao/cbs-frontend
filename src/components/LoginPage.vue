@@ -34,17 +34,26 @@
       </v-btn>
       -->
     </v-app-bar>
-
+  <v-form ref="form" v-model="valid" lazy-validation>
    <v-content>
       <v-card width="500" class="mx-auto mt-9">
         <v-card-title>Login Area</v-card-title>
         <v-card-text>
-          <v-text-field label="Username" prepend-icon="mdi-account-circle"/>
           <v-text-field 
+          label="Email" 
+          v-model="email"
+          prepend-icon="mdi-account-circle"
+          :rules="emailRules"
+          validate-on-blur
+          />
+          <v-text-field 
+          v-model="password"
           label="Password" 
+          :rules="passwordRules"
           :type="showPassword ? 'text' : 'password'"
           prepend-icon="mdi-lock"
           :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+          validate-on-blur
           @click:append="showPassword = !showPassword"/>
         </v-card-text>
 
@@ -57,6 +66,7 @@
         </v-card-actions>
       </v-card>
     </v-content>
+  </v-form>
  </v-app>
 </template>
 
@@ -64,14 +74,41 @@
 export default {
   name:'LoginPage',
   data: () => ({
-    showPassword:false
+    valid: true,
+    showPassword:false,
+    email:"",
+    password:"",
+    passwordRules: [(v) => !!v || "PassWord is required"],
+    emailRules: [
+      (v) => !!v || "E-mail is required",
+      (v) => /.+@.+\..+/.test(v) || "E-mail must be valid",
+    ],
   }),
   props: {
     source: String
   },
   methods:{
+    validate() {
+      //將校驗所有輸入並返回它們是否都有效
+      this.$refs.form.validate();
+    },
+    reset() {
+      //將清除所有輸入並重置校驗錯誤
+      this.$refs.form.reset();
+    },
+    resetValidation() {
+      //只是重置輸入校驗，而不會更改其狀態
+      this.$refs.form.resetValidation();
+    },
     Login(){
-      this.$router.push("/home");
+      if(this.password != "" && this.email != ""){
+        this.$router.push("/home");
+      }
+      else if (this.password == "" || this.email == ""){
+        this.validate();
+      }
+      
+      
     }
   }
 };
