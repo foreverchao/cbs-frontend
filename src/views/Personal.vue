@@ -91,7 +91,7 @@
         </v-list-item-icon>
 
         <v-list-item-content>
-          <v-list-item-title>aliconnors@example.com</v-list-item-title>
+          <v-list-item-title>{{email}}</v-list-item-title>
           <v-list-item-subtitle>Personal</v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
@@ -126,12 +126,32 @@
 </template>
 
 <script>
-  
+  import {apiUserGet} from "@/APIs/User";
   export default {
     name: 'Personal',
+    data: () => ({
+    email:"",
+  }),
 
     components: {
       
+    },
+    mounted() {
+      this.initialize();
+    },
+
+    methods:{
+      initialize(){
+        //console.log(this.$store.state.id)
+        let id = this.$store.state.id
+        apiUserGet(id)
+        .then((res) => {
+            console.log(res)
+            this.email = res.data.email
+        })
+        .catch()
+        
+      }
     },
   }
 </script>

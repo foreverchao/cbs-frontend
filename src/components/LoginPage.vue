@@ -109,8 +109,8 @@ export default {
           password:this.password,
         })
         .then((res) => {
-           console.log(res)
-           this.$store.commit("changeToken", res.data.token);
+           //console.log(res.data.access_token)
+           this.$store.commit("changeToken", res.data.access_token);
            this.$store.commit("changeId", res.data.id);
            this.$router.push("/home");
            
