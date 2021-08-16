@@ -62,7 +62,7 @@
           <!--  ToDo------- Register
           <v-btn color="success">Register</v-btn>
           -->
-          <v-btn color="primary" @click="Login">Login</v-btn>
+          <v-btn class="ml-auto" color="primary" @click="Login">Login</v-btn>
         </v-card-actions>
       </v-card>
     </v-content>
@@ -72,6 +72,7 @@
 
 <script>
 import {apiUserLogin} from "@/APIs/Auth";
+import Swal from "sweetalert2";
 export default {
   name:'LoginPage',
   data: () => ({
@@ -110,11 +111,30 @@ export default {
         .then((res) => {
            console.log(res)
            this.$store.commit("changeToken", res.data.token);
+           this.$store.commit("changeId", res.data.id);
            this.$router.push("/home");
+           
         })
-        .catch(() => {
-          console.log("Login fail !")
-        })
+        .catch((err) => {
+          console.log(err)
+
+          let errMsg = err
+          if(err.response == undefined){
+            errMsg = "Error: Network Error"
+          }
+          else if(err.response.status == 401){
+            errMsg = "Your email or password may be wrong"
+          }
+
+          Swal.fire({
+            icon: 'error',
+            title: 'ERROR !!',
+            text: errMsg,
+          })
+          this.email = "",
+          this.password = ""
+          
+        });
 
         
       }

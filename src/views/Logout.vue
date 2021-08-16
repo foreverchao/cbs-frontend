@@ -1,6 +1,6 @@
 <template>
   <div class="logout pa-6">
-    <h1>This is an about logout</h1>
+    
   </div>
 </template>
 
@@ -9,6 +9,17 @@
   export default {
     components:{
       
+    },
+    mounted() {
+      this.initialize();
+    },
+
+    methods:{
+      initialize(){
+        this.$store.commit("changeToken", "");
+        this.$store.commit("changeId", "");
+        this.$router.push("/");
+      }
     },
     
   }
