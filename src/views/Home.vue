@@ -79,16 +79,35 @@
 </template>
 
 <script>
+  
   export default {
     nmae:'Home',
     data: () => ({ 
       drawer: null,
       items: [
           { title: 'Personal', icon: 'mdi-account',to:"/personal" },
-          { title: 'About', icon: 'mdi-calendar-arrow-right',to:"/borrow" },
+          { title: 'Borrow', icon: 'mdi-calendar-arrow-right',to:"/borrow" },
+          { title: 'Borrowed-Information', icon: 'mdi-calendar-multiple-check',to:"/borrowinfo"},
           { title: 'Logout', icon: 'mdi-logout',to:"/logout" },
           { title: 'Setting', icon: 'mdi-cog-outline',to:"/setting" },
+
         ], 
     }),
+    mounted() {
+      this.initialize();
+    },
+
+    methods:{
+      initialize(){
+        //console.log(this.$store.state.id)
+        if (this.$store.state.token == ""){
+          this.$router.push("/");
+        }
+
+        
+        
+        
+      }
+    },
   }
 </script>

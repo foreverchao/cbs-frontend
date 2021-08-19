@@ -143,13 +143,19 @@
     methods:{
       initialize(){
         //console.log(this.$store.state.id)
-        let id = this.$store.state.id
-        apiUserGet(id)
-        .then((res) => {
+        if (this.$store.state.token == ""){
+          this.$router.push("/");
+        }
+        else{
+          let id = this.$store.state.id
+          apiUserGet(id)
+          .then((res) => {
             console.log(res)
             this.email = res.data.email
-        })
-        .catch()
+          })
+          .catch()
+        }
+       
         
       }
     },

@@ -21,6 +21,11 @@ const routes = [
         component: () => import(/* webpackChunkName: "borrow" */ '../views/Borrow.vue')
       },
       {
+        path: '/borrowinfo',
+        name: 'BorrowInfo',
+        component: () => import(/* webpackChunkName: "borrow" */ '../views/BorrowInfo.vue')
+      },
+      {
         path: '/setting',
         name: 'Setting',
         component: () => import(/* webpackChunkName: "setting" */ '../views/Setting.vue')
