@@ -8,3 +8,11 @@ export const apiUserGet = (id) => axios.get(`${originalURL}/user/${id}`,{
     }
 });
 
+export const apiUserPost = (data) => axios.post(`${originalURL}/add`,data,{
+    headers: {
+        'Authorization': `Bearer ${store.state.token}`
+    }
+});
+
+export const apiUserLoginCheck = (data) => axios.post(`${originalURL}/userlogin`, data);
+

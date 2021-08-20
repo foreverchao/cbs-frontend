@@ -37,7 +37,7 @@
   <v-form ref="form" v-model="valid" lazy-validation>
    <v-content>
       <v-card width="500" class="mx-auto mt-9">
-        <v-card-title>Login Area</v-card-title>
+        <v-card-title>Register Area</v-card-title>
         <v-card-text>
           <v-text-field 
           label="Email" 
@@ -58,17 +58,14 @@
         </v-card-text>
 
         <v-divider></v-divider>
-        <v-card-actions >
+        <v-card-actions>
           <!--  ToDo------- Register
           <v-btn color="success">Register</v-btn>
           -->
-          
-          
-          <v-btn class="ml-auto" text color="primary" :to="`/register`">
-            Register
+          <v-btn class="ml-auto" text color="primary" :to="`/`">
+           Back
           </v-btn>
-          <v-btn  color="primary" @click="Login">Login</v-btn>
-          
+          <v-btn  color="primary" @click="Register">Submmit</v-btn>
         </v-card-actions>
       </v-card>
     </v-content>
@@ -77,10 +74,10 @@
 </template>
 
 <script>
-import {apiUserLogin} from "@/APIs/Auth";
+import {apiUserPost,apiUserLoginCheck} from "@/APIs/User";
 import Swal from "sweetalert2";
 export default {
-  name:'LoginPage',
+  name:'Register',
   data: () => ({
     valid: true,
     showPassword:false,
@@ -91,6 +88,7 @@ export default {
       (v) => !!v || "E-mail is required",
       (v) => /.+@.+\..+/.test(v) || "E-mail must be valid",
     ],
+    existFlag:false,
   }),
   props: {
     source: String
@@ -108,43 +106,74 @@ export default {
       //只是重置輸入校驗，而不會更改其狀態
       this.$refs.form.resetValidation();
     },
-    Login(){
+    RegisterRealAdd(){
+        
+            apiUserPost({
+                email:this.email,
+                password:this.password,
+            })
+            .then(() => {
+            //console.log(res.data.access_token)
+                Swal.fire({
+                    icon: 'success',
+                    title: 'SUCCESS !!',
+                    text: "Register Success !",
+                    })
+                this.$router.push("/");
+            })
+            .catch(() => {
+                Swal.fire({
+                icon: 'error',
+                title: 'ERROR !!',
+                text: "Register Fail !",
+                })
+                this.email = "",
+                this.password = ""
+            });
+        
+        
+    },
+    Register(){
+      
+
       if(this.password != "" && this.email != ""){
-        apiUserLogin({
-          email:this.email,
-          password:this.password,
+        apiUserLoginCheck({
+            email:this.email,
         })
         .then((res) => {
-           //console.log(res.data.access_token)
-           this.$store.commit("changeToken", res.data.access_token);
-           this.$store.commit("changeId", res.data.id);
-           this.$router.push("/home");
-           
+            console.log(res.data)
+            if(res.data == 401){
+                this.existFlag = false
+                this.RegisterRealAdd()
+            }
+            else{
+                this.existFlag = true
+                Swal.fire({
+                icon: 'error',
+                title: 'ERROR !!',
+                text: "This email already exist !",
+                })
+                this.email = "",
+                this.password = ""
+            }
+            
         })
-        .catch((err) => {
-          console.log(err)
+        .catch()
 
-          let errMsg = err
-          if(err.response == undefined){
-            errMsg = "Error: Network Error"
-          }
-          else if(err.response.status == 401){
-            errMsg = "Your email or password may be wrong"
-          }
-
-          Swal.fire({
-            icon: 'error',
-            title: 'ERROR !!',
-            text: errMsg,
-          })
-          this.email = "",
-          this.password = ""
-          
-        });
+        
+        
+        
 
         
       }
       else if (this.password == "" || this.email == ""){
+           Swal.fire({
+              icon: 'error',
+              title: 'ERROR !!',
+              text: "Register Fail !",
+            })
+            this.email = "",
+            this.password = ""
         this.validate();
       }
       
