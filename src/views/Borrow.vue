@@ -43,7 +43,7 @@
             hide-details
             hide-no-data
             hide-selected
-            multiple
+            
             single-line
           ></v-autocomplete>
         </v-col>
@@ -152,7 +152,7 @@
       items_times: ['08:00~09:00', '09:00~10:00','10:00~11:00','11:00~12:00','12:00~13:00','13:00~14:00', '14:00~15:00','15:00~16:00','16:00~17:00','17:00~18:00'],
       selected_builds: null,
       items_builds: [],
-      selected_rooms: [],
+      selected_rooms: null,
       items_rooms: [],
       date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
       menu: false,
@@ -207,7 +207,7 @@
           date:this.date,
           time:this.selected_times
         }
-        if(temp.building != null && temp.room != [] && temp.date != null && temp.time != []){
+        if(temp.building != null && temp.room != null && temp.date != null && temp.time != []){
           apiRoomsPost(temp)
           .then((res) => {
             console.log('RoomsPost data',res)
@@ -218,7 +218,7 @@
               text: "Borrow Success !",
             })
             this.selected_builds = null
-            this.selected_rooms = []
+            this.selected_rooms = null
             this.date = null
             this.selected_times =[]   
           })
@@ -238,7 +238,7 @@
           })
 
           this.selected_builds = null
-          this.selected_rooms = []
+          this.selected_rooms = null
           this.date = null
           this.selected_times =[]
         }

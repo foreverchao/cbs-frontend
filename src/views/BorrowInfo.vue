@@ -135,7 +135,7 @@
 </template>
 
 <script>
-  
+   import {apiRoomsGet} from "@/APIs/Room";
   export default {
     components:{
       
@@ -195,29 +195,44 @@
 
         nativeEvent.stopPropagation()
         },
-        updateRange ({ start, end }) {
+        updateRange () {
         const events = []
 
-        const min = new Date(`${start.date}T00:00:00`)
-        const max = new Date(`${end.date}T23:59:59`)
-        const days = (max.getTime() - min.getTime()) / 86400000
-        const eventCount = this.rnd(days, days + 20)
+        
+        apiRoomsGet()
+        .then((res) => {
+          //
+          console.log('res',res)
+          //console.log("name",tempName,"date",tempDate,"timeStart",startTime,"timeEnd",endTime)
+          for (let i = 0; i < res.data.length; i++) {
+            for(let j = 0;j< res.data[i].time.length;j++){
+              let tempName = res.data[i].building + res.data[i].room
+              let tempDate = res.data[i].date
+              let startTime = res.data[i].time[j]
+              let endTime = res.data[i].time[j]
+              startTime = tempDate + "T" + startTime.slice(0,5) + ":00"
+              endTime = tempDate + "T" + endTime.slice(6) + ":00"
+              
+              const allDay = this.rnd(0, 3) === 0
+              
+              const first = new Date(startTime)//(firstTimestamp - (firstTimestamp % 900000))
+              
+              const second = new Date(endTime)//(first.getTime() + secondTimestamp)
 
-        for (let i = 0; i < eventCount; i++) {
-            const allDay = this.rnd(0, 3) === 0
-            const firstTimestamp = this.rnd(min.getTime(), max.getTime())
-            const first = new Date(firstTimestamp - (firstTimestamp % 900000))
-            const secondTimestamp = this.rnd(2, allDay ? 288 : 8) * 900000
-            const second = new Date(first.getTime() + secondTimestamp)
-
-            events.push({
-            name: this.names[this.rnd(0, this.names.length - 1)],
-            start: first,
-            end: second,
-            color: this.colors[this.rnd(0, this.colors.length - 1)],
-            timed: !allDay,
-            })
-        }
+              events.push({
+              name: tempName,//this.names[this.rnd(0, this.names.length - 1)],
+              start: first,
+              end: second,
+              color: this.colors[0],
+              timed: !allDay,
+              })
+            }
+            
+          }
+        
+        })
+        .catch()
+        
 
         this.events = events
         },
